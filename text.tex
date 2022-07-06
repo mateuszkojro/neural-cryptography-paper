@@ -1,0 +1,166 @@
+\documentclass{artikel3}
+
+% If you're new to LaTeX, here's some short tutorials:
+% https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes
+% https://en.wikibooks.org/wiki/LaTeX/Basics
+
+% Formatting
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[titletoc,title]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+
+% Math
+% https://www.overleaf.com/learn/latex/Mathematical_expressions
+% https://en.wikibooks.org/wiki/LaTeX/Mathematics
+\usepackage{amsmath,amsfonts,amssymb,mathtools}
+
+% Images
+% https://www.overleaf.com/learn/latex/Inserting_Images
+% https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+\usepackage{graphicx,float}
+
+% Tables
+% https://www.overleaf.com/learn/latex/Tables
+% https://en.wikibooks.org/wiki/LaTeX/Tables
+
+% Code syntax highlighting
+% https://www.overleaf.com/learn/latex/Code_Highlighting_with_minted
+\usepackage{minted}
+\usepackage{circuitikz}
+\usemintedstyle{trac}
+
+% % References
+% % https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX
+% % https://en.wikibooks.org/wiki/LaTeX/Bibliography_Management
+% \usepackage{biblatex}
+
+% \addbibresource{references.bib}
+
+% Title content
+\title{My text title}
+\author{Mateusz Kojro}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% Abstract
+\begin{abstract}
+    Add your abstract here.
+\end{abstract}
+
+
+  \section{Matplotlib import}
+    \begin{figure}[h!]
+        \begin{center}
+            \input{figure.pgf}
+        \end{center}
+        \caption{Some imported matplotlib plot}\label{fig:figure}
+    \end{figure}
+
+
+\section{Some circuit}
+
+\begin{circuitikz} \draw
+    (2,0)to[battery, l_=$\epsilon$](4,0)
+    (4,0)to[R=$R_1$](4,2)
+    (2,0)to[R=$R_2$,*-*](2,4)
+    (0,0)to[R=$R_3$](0,2)
+    (0,2)--(2,4)
+    (4,2)--(2,4)
+    (0,0)--(2,0)
+    ;
+    \label{circuit}
+\end{circuitikz}
+
+\section{Hello nice code}
+\begin{center}
+    \begin{minted}[frame=single,]{cpp}
+#include <iostream>
+int main() { // Thats a main function
+    std::cout << "Hello world!" << std::endl;    
+    return 0;
+}
+\end{minted}
+\end{center}
+
+% Introduction and Overview
+\section{Introduction and Overview}
+Add your introduction and overview here.
+
+% Example Subsection
+\subsection{Subsection Title}
+This is a subsection.
+
+% Example Subsubsection
+\subsubsection{Subsubsection Title}
+This is a subsubsection.
+
+%  Theoretical Background
+\section{Theoretical Background}
+Add your theoretical background here. Some example text: As we learned from our textbook \cite{kutz_2013}, Fourier introduced the concept of representing a given function $f(x)$ by a trigonometric series of sines and cosines:
+\begin{equation}
+    f(x) = \frac{a_0}{2} + \sum_{i=1}^\infty \left(a_n\cos{nx} + b_n\sin{nx}\right) \quad x \in (-\pi,\pi].
+    \label{eqn:fourierseries}
+\end{equation}
+You can reference numbered equations, figures, tables, algorithms, and code like this: Equation~\ref{eqn:fourierseries}, etc.
+
+% Algorithm Implementation and Development
+\section{Algorithm Implementation and Development}
+Add your algorithm implementation and development here. See Algorithm~\ref{alg:example} for how to include an algorithm in your document. This is how to make an \textit{ordered} list:
+\begin{enumerate}
+    \item Fluffy swallowed a marble.
+    \item I took Fluffy to the vet.
+    \item They took an ultrasound of Fluffy's intestines.
+\end{enumerate}
+
+% Computational Results
+\section{Computational Results}
+\begin{table}
+    \centering
+    \begin{tabular}{rll}
+           & Name             & Years        \\
+        \hline
+        1  & Frosty           & 1922-1930    \\
+        2  & Frosty II        & 1930-1936    \\
+        3  & Wasky            & 1946         \\
+        4  & Wasky II         & 1947         \\
+        5  & Ski              & 1954         \\
+        6  & Denali           & 1958         \\
+        7  & King Chinook     & 1959-1968    \\
+        8  & Regent Denali    & 1969         \\
+        9  & Sundodger Denali & 1981-1992    \\
+        10 & King Redoubt     & 1992-1998    \\
+        11 & Prince Redoubt   & 1998         \\
+        12 & Spirit           & 1999-2008    \\
+        13 & Dubs I           & 2009-2018    \\
+        14 & Dubs II          & 2018-Present
+    \end{tabular}
+    \caption{UW mascots as described in \cite{washington_huskies}.}
+    \label{tab:mascots}
+\end{table}
+
+
+% Summary and Conclusions
+\section{Summary and Conclusions}
+Add your summary and conclusions here.
+
+% Appendices
+\begin{appendices}
+
+    % MATLAB Functions
+    \section{MATLAB Functions}
+    Add your important MATLAB functions here with a brief implementation explanation. This is how to make an \textbf{unordered} list:
+    \begin{itemize}
+        \item \texttt{y = linspace(x1,x2,n)} returns a row vector of \texttt{n} evenly spaced points between \texttt{x1} and \texttt{x2}.
+        \item \texttt{[X,Y] = meshgrid(x,y)} returns 2-D grid coordinates based on the coordinates contained in the vectors \texttt{x} and \texttt{y}. \text{X} is a matrix where each row is a copy of \texttt{x}, and \texttt{Y} is a matrix where each column is a copy of \texttt{y}. The grid represented by the coordinates \texttt{X} and \texttt{Y} has \texttt{length(y)} rows and \texttt{length(x)} columns.
+    \end{itemize}
+
+
+\end{appendices}
+
+\end{document}
