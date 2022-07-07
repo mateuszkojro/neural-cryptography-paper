@@ -1,4 +1,4 @@
-\documentclass{artikel3}
+\documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage[titletoc,title]{appendix}
@@ -10,104 +10,73 @@
 \usepackage{circuitikz}
 \usemintedstyle{trac}
 \title{My text title}
-\author{Mateusz Kojro}
+\author{Piotr Drabik, Mateusz Kojro}
 \date{\today}
 
 \begin{document}
 
 \maketitle
 
-% Abstract
 \begin{abstract}
-    Add your abstract here.
+In this paper we present the feasibility study of using deep learning techniques to attack components of the AES cryptographic algorithm. We compare the relative performance of spiking and traditional neural networks as well as the impact of the used spike encoding and decoding functions.
 \end{abstract}
 
 
-\section{Some circuit}
+\section{Introduction}
+Advanced Encryption standard (AES) is one of the most widely used encryption algorithms and no 
 
-\begin{circuitikz} \draw
-    (2,0)to[battery, l_=$\epsilon$](4,0)
-    (4,0)to[R=$R_1$](4,2)
-    (2,0)to[R=$R_2$,*-*](2,4)
-    (0,0)to[R=$R_3$](0,2)
-    (0,2)--(2,4)
-    (4,2)--(2,4)
-    (0,0)--(2,0)
-    ;
-    \label{circuit}
-\end{circuitikz}
+\section{Motivation}
 
-\section{Hello nice code}
-\begin{center}
-    \begin{minted}[frame=single,]{cpp}
-#include <iostream>
-int main() { // Thats a main function
-    std::cout << "Hello world!" << std::endl;    
-    return 0;
-}
-\end{minted}
-\end{center}
+Deep learning has proven over the years its ability for modeling and solving problems that were thought to be nearly impossible. Given this track record and emergence of new ideas in this space problems once though to be exceptionally hard need to be examine more closely with the context of recent advancements. In this paper we will investigate the feasibility of using deep learning (namely standard neural networks and spiking neural networks) in attacks on the Rijmen's mix columns algorithm - a major component of the ubiquitous AES encryption method.
 
-% Introduction and Overview
-\section{Introduction and Overview}
-Add your introduction and overview here.
+\section{Theoretical background}
 
-% Example Subsection
-\subsection{Subsection Title}
-This is a subsection.
+\subsection{Advanced Encryption Standard}
 
-% Example Subsubsection
-\subsubsection{Subsubsection Title}
-This is a subsubsection.
+Introduced by Joan Daemen and Vincent Rijmen in year 1998, encryption standard is a widely used, fixed block size, symmetric encryption algorithm. Adopted by U.S. AES superseded DES(Data Encryption Standard) in year 2002. 
 
-%  Theoretical Background
-\section{Theoretical Background}
-Add your theoretical background here. Some example text: As we learned from our textbook \cite{kutz_2013}, Fourier introduced the concept of representing a given function $f(x)$ by a trigonometric series of sines and cosines:
-\begin{equation}
-    f(x) = \frac{a_0}{2} + \sum_{i=1}^\infty \left(a_n\cos{nx} + b_n\sin{nx}\right) \quad x \in (-\pi,\pi].
-    \label{eqn:fourierseries}
-\end{equation}
-You can reference numbered equations, figures, tables, algorithms, and code like this: Equation~\ref{eqn:fourierseries}, etc.
+\subsubsection{Known Attacks}
+To this day AES cipher has not been broken, meaning there are no known algorithms that can decipher an encrypted message without knowledge of used key, in time shorted than needed to perform brute-force attack.
+In year 2002 a theoretical attack, named the "XSL attack", was announced by Nicolas Courtois and Josef Pieprzyk, the soul existence of mathematical solutions to the algorithm behind AES, poses questions about it's security. Provided by Courtois and Pieprzyk mathematical equations used to break the algorithm require enormous amounts of computational power and time, this problem might be mitigated by usage of neural-networks.
 
-% Algorithm Implementation and Development
-\section{Algorithm Implementation and Development}
-Add your algorithm implementation and development here. See Algorithm~\ref{alg:example} for how to include an algorithm in your document. This is how to make an \textit{ordered} list:
-\begin{enumerate}
-    \item Fluffy swallowed a marble.
-    \item I took Fluffy to the vet.
-    \item They took an ultrasound of Fluffy's intestines.
-\end{enumerate}
+\subsubsection{Building blocks}
+AES consists of 4 main building blocks, static sized key and Information block. 
 
-% Computational Results
-\section{Computational Results}
-\begin{table}
-    \centering
-    \begin{tabular}{rll}
-           & Name             & Years        \\
-        \hline
-        1  & Frosty           & 1922-1930    \\
-        2  & Frosty II        & 1930-1936    \\
-        3  & Wasky            & 1946         \\
-        4  & Wasky II         & 1947         \\
-        5  & Ski              & 1954         \\
-        6  & Denali           & 1958         \\
-        7  & King Chinook     & 1959-1968    \\
-        8  & Regent Denali    & 1969         \\
-        9  & Sundodger Denali & 1981-1992    \\
-        10 & King Redoubt     & 1992-1998    \\
-        11 & Prince Redoubt   & 1998         \\
-        12 & Spirit           & 1999-2008    \\
-        13 & Dubs I           & 2009-2018    \\
-        14 & Dubs II          & 2018-Present
-    \end{tabular}
-    \caption{UW mascots as described in \cite{washington_huskies}.}
-    \label{tab:mascots}
-\end{table}
+\begin{itemize}
+\item Encryption Key, based on chosen block size key is sized accordingly. The size of used Key specifies number of "rounds" of encoding, for 128-bit keys it is 10 rounds of encoding, 12 for 192-bit keys, 14 for 256-bit. 
+\item Information block, encoded data is spited into chunks of sizes: 128, 192 or 256 bit, those are encoded separately.  
+\end{itemize}
+Building blocks of AES algorithm:
+\begin{itemize}
+\item Byte Sub
+S-Box(substitution-box) stage, used to obscure relationship betweenn key and ciphertext, thus ensuring Shannon's property of confusion.
+\item Shift Row
+\item Mix Column
+\item Add Round Key
+\end{itemize}
+
+\subsection{Spiking neural networks}
+
+Despite its successes in many areas across number of industries broad field of deep learning is constantly expanding and evolving. One of the results of this process is the introduction of neuron models more closely resembling those found in the human brain. One of the most popular examples of this trend are "leaky integrate and fire" neurons. They allow for an introduction of time dependent activation function and doing so are overstepping one of the big simplifications introduced by traditional deep learning models. Networks composed of this kinds of neurons are often called spiking neural networks (SNN).
+
+\section{Methods}
+\subsection{Models}
 
 
-% Summary and Conclusions
-\section{Summary and Conclusions}
-Add your summary and conclusions here.
+\subsection{Dataset}
 
+In order to test and compare the introduced models <we> prepared 2 datasets consisting of randomly generated <...>
+
+\begin{itemize}
+    \item The training dataset: N encoded massages with the <some> message size
+    \item Evaluation dataset composed of N messages with the same sizes as the training dataset
+\end{itemize}
+
+
+\section{Results}
+
+\section{Future work}
+
+\section{Conclusions}
 
 \end{document}
