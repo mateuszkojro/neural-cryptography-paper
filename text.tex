@@ -8,6 +8,16 @@
 \usepackage{graphicx,float}
 \usepackage{minted}
 \usepackage{circuitikz}
+
+
+\usepackage[backend=biber,
+    style=numeric-comp,
+    maxcitenames=1,
+    maxbibnames=1,
+    %backref=true
+    ]{biblatex}
+\addbibresource{references.bib}
+
 \usemintedstyle{trac}
 \title{My text title}
 \author{Piotr Drabik, Mateusz Kojro}
@@ -72,11 +82,18 @@ In order to test and compare the introduced models <we> prepared 2 datasets cons
     \item Evaluation dataset composed of N messages with the same sizes as the training dataset
 \end{itemize}
 
+\section{Training}
+
+We trained both models using the same dataset for <x> epochs with <y> minibatches and evaluated the perfomance using a testing dataset 
+
 
 \section{Results}
 
-\section{Future work}
 
-\section{Conclusions}
+\section{Discusion}
+
+As we have shown in spite of the many advantages they offer SNN are not really well fit for regression type tasks like approximating mathematical functions. Main reason for that is the dificulty of encodinng and decoding the spikes becouse there is no well known and understood method for this operation. Reaserch done by \cite{kahana_function_2022} shows that there is a possibility of using auto encoders like DeepONet \cite{lu_learning_2021} to achive this but the work is still in the early stages (\cite{kahana_function_2022} shows SNN with DeepONet assistance learning functions like $x^2$ and $\sin{x}$). Additionaly while using SNN without specialized hardware\cite{bouvier_spiking_2019} the training time increases dramaticaly \cite{kahana_function_2022}.
+
+\printbibliography
 
 \end{document}
