@@ -2,12 +2,17 @@
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
 \usepackage[titletoc,title]{appendix}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{amsmath,amsfonts,amssymb,mathtools}
+\usepackage{pgfplots}
+
+% \usepackage[T1]{fontenc}
+% \usepackage{lmodern}
+% \usepackage{amsmath,amsfonts,amssymb,mathtools}
 \usepackage{graphicx,float}
-\usepackage{minted}
-\usepackage{circuitikz}
+\pgfplotsset{compat=1.18}
+% \usepackage{minted}
+% \usepackage{circuitikz}
+% \usemintedstyle{trac}
+\graphicspath{plots}
 
 
 \usepackage[backend=biber,
@@ -17,8 +22,8 @@
     %backref=true
     ]{biblatex}
 \addbibresource{references.bib}
+% \addbibresource{references_2.bib}
 
-\usemintedstyle{trac}
 \title{My text title}
 \author{Piotr Drabik, Mateusz Kojro}
 \date{\today}
@@ -28,12 +33,14 @@
 \maketitle
 
 \begin{abstract}
-In this paper we present the feasibility study of using deep learning techniques to attack components of the AES cryptographic algorithm. We compare the relative performance of spiking and traditional neural networks as well as the impact of the used spike encoding and decoding functions.
+In this paper we present the feasibility study of using deep learning techniques to cryptographically attack components of the AES encryption algorithm. We compare the relative performance of spiking and traditional neural networks in regression tasks at different levels of complexity. We show that due to encoding issues (conversion from numeric values to spiking time series) SNN cannot be trivially applied to this kinds of problems.
 \end{abstract}
 
 
 \section{Introduction}
-Advanced Encryption standard (AES) is one of the most widely used encryption algorithms and no 
+Advanced Encryption standard (AES) is one of the most widely used encryption algorithms, it's resilience to direct attacks guarantees safe data encryption. Simple construction of cipher guarantees fast encryption that can be chained together, further complicating any efforts of direct attack, unfortunately the simplicity of algorithm in the future may lead to mathematical solution, that reverses the algorithm without need for knowledge of used key.
+
+Spiking neural networks (SNN) provide new deep-learning solution more closely resembling neurons found in nature. New neuron model might enable faster learning rate crucial when working with big sets of data.
 
 \section{Motivation}
 
@@ -43,11 +50,11 @@ Deep learning has proven over the years its ability for modeling and solving pro
 
 \subsection{Advanced Encryption Standard}
 
-Introduced by Joan Daemen and Vincent Rijmen in year 1998, encryption standard is a widely used, fixed block size, symmetric encryption algorithm. Adopted by U.S. AES superseded DES(Data Encryption Standard) in year 2002. 
+Introduced by Joan Daemen and Vincent Rijmen in year 1998, encryption standard is a widely used, fixed block size, symmetric encryption algorithm. Adopted by U.S. AES superseded DES(Data Encryption Standard) in year 2002 \cite{Cryptanalysis of Block Ciphers}.
 
 \subsubsection{Known Attacks}
 To this day AES cipher has not been broken, meaning there are no known algorithms that can decipher an encrypted message without knowledge of used key, in time shorted than needed to perform brute-force attack.
-In year 2002 a theoretical attack, named the "XSL attack", was announced by Nicolas Courtois and Josef Pieprzyk, the soul existence of mathematical solutions to the algorithm behind AES, poses questions about it's security. Provided by Courtois and Pieprzyk mathematical equations used to break the algorithm require enormous amounts of computational power and time, this problem might be mitigated by usage of neural-networks.
+In year 2002 a theoretical attack, named the "XSL attack", was announced by Nicolas Courtois and Josef Pieprzyk, the soul existence of mathematical solutions to the algorithm behind AES, poses questions about it's security. Provided by Courtois and Pieprzyk mathematical equations used to break the algorithm require enormous amounts of computational power and time, this problem might be mitigated by usage of neural-networks \cite{Cryptanalysis of Block Ciphers}.
 
 \subsubsection{Building blocks}
 AES consists of 4 main building blocks, static sized key and Information block. 
@@ -59,11 +66,12 @@ AES consists of 4 main building blocks, static sized key and Information block.
 Building blocks of AES algorithm:
 \begin{itemize}
 \item Byte Sub
-S-Box(substitution-box) stage, used to obscure relationship betweenn key and ciphertext, thus ensuring Shannon's property of confusion.
-\item Shift Row
-\item Mix Column
-\item Add Round Key
+S-Box(substitution-box) stage, used to obscure relationship between key and cipher text, thus ensuring Shannon's property of confusion.
+\item Shift Row, a transposition step where the rows of the state are shifted cyclically a certain number of steps.
+\item Mix Column, a linear mixing operation which operates on the columns of the state, combining the four bytes in each column.
+\item Add Round Key, each byte of data block is combined with key with xor operation 
 \end{itemize}
+ To every chunk of message those stages are applied in succession, this operation is repeated multiple times depending on key size
 
 \subsection{Spiking neural networks}
 
@@ -72,6 +80,10 @@ Despite its successes in many areas across number of industries broad field of d
 \section{Methods}
 \subsection{Models}
 
+In order to compare performance of SNN and NN we prepared two simple models:
+
+\subsubsection{SNN Model}
+\subsubsection{NN Model}
 
 \subsection{Dataset}
 
@@ -84,16 +96,132 @@ In order to test and compare the introduced models <we> prepared 2 datasets cons
 
 \section{Training}
 
-We trained both models using the same dataset for <x> epochs with <y> minibatches and evaluated the perfomance using a testing dataset 
+We trained both models using the same dataset for <x> epochs with <y> minibatches and evaluated the performance using a testing dataset 
 
 
 \section{Results}
 
 
-\section{Discusion}
 
-As we have shown in spite of the many advantages they offer SNN are not really well fit for regression type tasks like approximating mathematical functions. Main reason for that is the dificulty of encodinng and decoding the spikes becouse there is no well known and understood method for this operation. Reaserch done by \cite{kahana_function_2022} shows that there is a possibility of using auto encoders like DeepONet \cite{lu_learning_2021} to achive this but the work is still in the early stages (\cite{kahana_function_2022} shows SNN with DeepONet assistance learning functions like $x^2$ and $\sin{x}$). Additionaly while using SNN without specialized hardware\cite{bouvier_spiking_2019} the training time increases dramaticaly \cite{kahana_function_2022}.
+\section{Discussion}
 
-\printbibliography
+As we have shown in spite of the many advantages they offer SNN are not really well fit for regression type tasks like approximating mathematical functions. Main reason for that is the difficulty of encoding and decoding the spikes because there is no well known and understood method for this operation. Research done by \cite{kahana_function_2022} shows that there is a possibility of using auto encoders like DeepONet \cite{lu_learning_2021} to achieve this but the work is still in the early stages (\cite{kahana_function_2022} shows SNN with DeepONet assistance learning functions like $x^2$ and $\sin{x}$). Additionally while using SNN without specialized hardware\cite{bouvier_spiking_2019} the training time increases dramatically \cite{kahana_function_2022}.
+
+
+
+
+
+\begin{figure}
+    \input{./plots/xsqr_snn_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/xsqr_nn_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/xsqr_both_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/xsqr_binomial.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \input{./plots/xsqr_binomial.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+
+\begin{figure}
+\input{./plots/2x_binomial.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/2x_both_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/2x_snn_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/2x_nn_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/2x_both_loss_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/2x_binomial.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+
+\begin{figure}
+\input{./plots/loss_over_time_for_Rijndael_MixColumns_function_SNN.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/loss_over_time_for_Rijndael_MixColumns_function_NN.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/loss_over_time_for_Rijndael_MixColumns_function_SNN_and_NN.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/loss_over_time_for_Rijndael_MixColumns_function_SNN_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/loss_over_time_for_Rijndael_MixColumns_function_NN_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/loss_over_time_for_Rijndael_MixColumns_function_SNN_and_NN_histogram.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}
+\input{./plots/Rijndael_MixColumns_function_binomial.pgf}
+    \caption{Caption}
+    \label{fig:my_label}
+\end{figure}
+
+\printbiliography
 
 \end{document}
